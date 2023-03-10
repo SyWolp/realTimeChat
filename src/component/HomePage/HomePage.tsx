@@ -16,7 +16,7 @@ import { createChat } from "../../graphql/mutations";
 import { onCreateChat } from "@/graphql/subscriptions";
 export default function Home(): JSX.Element {
   const [chatData, setChatData] = useState<any>([]);
-
+  const [sortData, setSortData] = useState<any>([]);
   const [createChatData, setCreateChatData] = useState<any>({
     text: "",
     author: "",
@@ -55,6 +55,15 @@ export default function Home(): JSX.Element {
     realTimeChat();
   }, []);
 
+  useEffect(() => {
+    const sortChat = [...chatData];
+    sortChat.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    setSortData(sortChat);
+  }, [chatData]);
+
   return (
     <Flex
       minH={"100vh"}
@@ -82,7 +91,7 @@ export default function Home(): JSX.Element {
           flexDir={"column"}
           overflowY={"scroll"}
         >
-          {chatData?.map((v: any) => {
+          {sortData?.map((v: any) => {
             return (
               <Flex key={v.id}>
                 <Text mx={2} my={1}>
